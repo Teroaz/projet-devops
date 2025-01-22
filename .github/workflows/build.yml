@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout
+        uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go
+        uses: actions/setup-go@v4
         with:
           go-version: '1.21.5'
 
@@ -34,10 +34,10 @@ jobs:
     needs: test
     steps:
       - name: Checkout code
-        uses: actions/checkout
+        uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go
+        uses: actions/setup-go@v4
         with:
           go-version: '1.21.5'
 
