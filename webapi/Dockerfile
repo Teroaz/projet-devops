@@ -1,7 +1,11 @@
 FROM golang:1.21.5 AS builder
 WORKDIR /app
+
+RUN go mod init github.com/Teroaz/projet-devops
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app
+RUN go mod tidy
+
+RUN go build -o app ./webapi/main.go
 
 FROM alpine:latest
 WORKDIR /root/
