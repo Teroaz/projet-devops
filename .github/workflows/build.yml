@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - docker-pipeline
+      - docker-with-buildpack
 
 env:
   DOCKER_IMAGE_NAME: projet-devops
@@ -27,6 +28,11 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Install pack CLI
+        run: |
+          curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.29.0/pack-v0.29.0-linux.tgz" | tar xzv
+          sudo mv pack /usr/local/bin/pack
+          
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -35,20 +41,12 @@ jobs:
         with:
           go-version: '1.21.5'
 
-      - name: Build binary
-        run: go build -o app ./webapi/main.go
+      - name: Build and push Docker image using Buildpacks
+        run: |
+          pack build ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }} \
+            --builder paketobuildpacks/builder:full \
+            --path ./webapi
+          
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.DOCKER_REGISTRY_URL }} -u ${{ env.DOCKER_USERNAME }} --password-stdin
+          docker push ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}
 
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.DOCKER_REGISTRY_URL }}
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./webapi/Dockerfile
-          push: true
-          tags: ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}
