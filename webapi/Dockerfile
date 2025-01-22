@@ -1,4 +1,4 @@
-FROM golang:1.20.6 AS builder
+FROM golang:1.20 AS builder
 WORKDIR /app
 
 RUN go mod init github.com/Teroaz/projet-devops
