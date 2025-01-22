@@ -27,7 +27,7 @@ jobs:
         run: go mod tidy
 
       - name: Build application
-        run: go build -o app ./...
+        run: go build -o app ./webapi/main.go
 
   # test:
   #   runs-on: ubuntu-latest
