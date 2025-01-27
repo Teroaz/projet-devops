@@ -1,14 +1,13 @@
-FROM golang:1.21.5 AS builder
-WORKDIR /app
+FROM golang:1.21
 
-RUN go mod init github.com/Teroaz/projet-devops
+WORKDIR /webapi
+
 COPY . .
+
 RUN go mod tidy
 
-RUN go build -o app ./webapi/main.go
+RUN go build -o main .
 
-FROM alpine:latest
-WORKDIR /root/
-COPY --from=builder /app/app .
 EXPOSE 8080
-CMD ["./app"]
+
+CMD ["./main"]
