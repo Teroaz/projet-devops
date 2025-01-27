@@ -8,7 +8,7 @@ RUN go mod tidy
 RUN go build -o app ./webapi/main.go
 
 FROM alpine:latest
-WORKDIR /root/
+WORKDIR /app/
 COPY --from=builder /app/app .
 EXPOSE 8080
 CMD ["./app"]
