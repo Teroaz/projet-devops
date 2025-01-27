@@ -40,7 +40,7 @@ Points de terminaison disponibles
 
 
 ## Pipeline CI/CD
-Le pipeline est défini dans `.github/workflows/go-docker.yml`. 
+Le pipeline est défini dans `.github/workflows/build.yml`. 
 
 Voici les étapes principales :
 - Compilation Go, télécharge le code et configure l'environnement Go.
